@@ -1,0 +1,57 @@
+graph TD
+    %% Phase 1: Deep Data Ingestion
+    subgraph P1 [Phase 1: Multi-Threaded Data Harvester]
+        A[TomTom Traffic API Endpoint] -->|60s Pulse Heartbeat| B(traffic_harvester.py Engine)
+        B -->|Async Request Loop| B1{Network Status?}
+        B1 -->|Success| B2[Parse JSON: Speed, Delay, Confidence]
+        B1 -->|Fail| B3[Trigger Connection Retry & Error Log]
+        B2 --> B4[Assign ISO-8601 Timestamp & Pulse ID]
+        B4 --> C[(raw_traffic_pulses.csv Transactional DB)]
+    end
+
+    %% Phase 2: Mobility Refinery (From Notes)
+    subgraph P2 [Phase 2: Mobility Refinery & Priority Engine]
+        C --> D[Refinery Stage: Transform Raw to Structural]
+        D --> E{Digital Quality Firewall}
+        E -->|Drop if Confidence < 70%| E1[Clean Missing Values & Noise]
+        E1 --> F[Logical Transformation Layer]
+        F --> F1[Geolocation Mapping: Lat/Long to Named Chowks]
+        F --> F2[Feature Selection: Speed-to-Free-Flow Ratio]
+        F1 & F2 --> G[Priority Logic Engine: Rank Scoring]
+        G --> H1[Rank 1: Critical - Emergency Green Needed]
+        G --> H2[Rank 4: Normal - Standard Safety Cycle]
+        H1 & H2 --> J[Refined Mobility Feature Matrix]
+    end
+
+    %% Phase 3: Machine Learning Brain (From Notes)
+    subgraph P3 [Phase 3: Analytical ML Brain]
+        J --> K[Unsupervised K-Means Algorithm]
+        K -->|Auto-Grouping Logic| K1{Clustering Results}
+        K1 -->|High Spd / 0 Delay| L1[Cluster: Low Traffic State]
+        K1 -->|Avg Spd / Manageable| L2[Cluster: Moderate Traffic State]
+        K1 -->|Low Spd / High Delay| L3[Cluster: Heavy/Platinum Traffic State]
+        
+        J --> M[Agglomerative Hierarchical Logic]
+        M -->|Cluster Linkage| N[Dendrogram: Chowk Behavioral Relations]
+        
+        J --> O[3D Feature Space Visualization]
+        O -->|Axes: Speed + Delay + Confidence| P[3D Spatial Mobility Analytics]
+    end
+
+    %% Phase 4: Command Center & Real-Time Action
+    subgraph P4 [Phase 4: Dashboard & Signal Trigger Hub]
+        L1 & L2 & L3 --> Q[Streamlit Interactive Dashboard]
+        N & P --> Q
+        Q --> Q1[Live KPI Cards: Network Speed & System Health]
+        Q --> Q2[Interactive Dehradun Traffic Heatmap]
+        
+        Q1 & Q2 --> R{Signal Priority Trigger}
+        R -->|If Rank 1 / Heavy| R1[Adaptive Signaling: Extend Green Phase]
+        R -->|If Rank 4 / Low| R2[Maintain Safety Cycle: Fixed Timer]
+        
+        Q --> S[Strategic Alerting System]
+        S --> S1[Evasive Rerouting for Emergency Services]
+        S --> S2[Citizen Departure Alerts & Trend Analysis]
+        
+        Q --> T[Administrative Audit Logs: Decision History]
+    end
