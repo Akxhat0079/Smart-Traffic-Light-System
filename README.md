@@ -32,8 +32,8 @@ Asynchronous Harvesting: Designed for scale with non-blocking API requests.
 
 Citizen Mobility Mapping: Integrated geodata for strategic rerouting and public alerts.
 
-Author: [Your Name]
+Author:     Akshat Malik
 
 Institution: DIT University
 
-Focus: Data Science, Embedded Systems, and Urban Mobility Analytics
+Focus: Data Science
